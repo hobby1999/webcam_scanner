@@ -1,0 +1,16 @@
+[LIST]
+task4_type=1
+task4_EndTime=1514217599
+task4_BeginTime=1514131200
+task3_type=1
+task3_EndTime=1513353599
+task3_BeginTime=1513267200
+task2_type=1
+task2_EndTime=1502467199
+task2_BeginTime=1502380800
+task1_type=1
+task1_EndTime=1502380799
+task1_BeginTime=1502294400
+
+[NUM]
+taskNum=4
