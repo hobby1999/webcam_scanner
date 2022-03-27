@@ -8,7 +8,6 @@ import shutil
 @router.get("/binwalk_encrpt",description="上传后进行调用，进行熵值分析以判断固件是否加密，filename传值为上传的固件名称",name="熵值分析")
 async def binwalkencrpt(username,filename):
     file_tmp_path = filename.rsplit(".",1)[0]
-    print(file_tmp_path)
     try:
         if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{filename}"):
             args = f"binwalk -EJ firmware/tmp/{username}/{file_tmp_path}/{filename}"
