@@ -1,18 +1,21 @@
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 import os
+import shutil
 
 @router.get("/delete",name="文件删除接口",description="文件删除API，username为用户名，filename为需要删除的固件")
 async def deletefimware(username,filename):
     file_tmp_path = filename.rsplit(".",1)[0]
+    file_extracted_path = f"firmware/extract/{username}/{file_tmp_path}/"
     try:
         print(f"firmware/tmp/{username}/{file_tmp_path}/{filename}")
         if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{filename}"):
             os.remove(f"firmware/tmp/{username}/{file_tmp_path}/{filename}")
             if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{filename}.png"):
                 os.remove(f"firmware/tmp/{username}/{file_tmp_path}/{filename}.png")
-            else:
-                return {"code":"200","status":True,"msg":"删除成功","datetime":getcurrenttime()}
+            if os.path.isdir(file_extracted_path):
+                shutil.rmtree(file_extracted_path)
+            return {"code":"200","status":True,"msg":"删除成功","datetime":getcurrenttime()}
         else:
             return {"code":"503","status":False,"msg":"该文件不存在","datetime":getcurrenttime()}
     except:
