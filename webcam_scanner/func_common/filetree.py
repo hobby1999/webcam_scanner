@@ -1,4 +1,3 @@
-import json
 from os import walk,path
 
 def file_to_dict(fpath):
