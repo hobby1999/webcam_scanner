@@ -1,5 +1,8 @@
 from os import walk,path
 
+'''
+为filetreeapi提供的数据结构
+'''
 def file_to_dict(fpath):
     return {
         'name': path.basename(fpath),
@@ -12,6 +15,7 @@ def folder_to_dict(rootpath):
             'type': 'folder',
             'children': [],
             }
+
 
 def tree_to_dict(rootpath):
     root_dict = folder_to_dict(rootpath)
@@ -32,5 +36,5 @@ def tree_to_json(rootdir):
         return root_dict
     except:
         pass
-    
+
 
