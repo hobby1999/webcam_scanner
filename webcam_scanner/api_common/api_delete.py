@@ -8,7 +8,6 @@ async def deletefimware(username,filename):
     file_tmp_path = filename.rsplit(".",1)[0]
     file_extracted_path = f"firmware/extract/{username}/{file_tmp_path}/"
     try:
-        print(f"firmware/tmp/{username}/{file_tmp_path}/{filename}")
         if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{filename}"):
             os.remove(f"firmware/tmp/{username}/{file_tmp_path}/{filename}")
             if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{filename}.png"):
