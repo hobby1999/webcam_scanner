@@ -1,6 +1,7 @@
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 from func_common.filepathforchecksec import get_filepaths
+from func_common.passwdcheck import checkKnowPasswd,bruteForcePasswd
 import os
 
 @router.get("/checkpasswd",
@@ -13,6 +14,7 @@ async def checkpasswd(username,filename):
     shadow_path_result = []
     passwd_result = []
     shadow_result = []
+    final_result = []
     try:
         if os.path.isdir(filepath):
           
@@ -31,15 +33,20 @@ async def checkpasswd(username,filename):
         for line in shadow_fopen.readlines():
             shadow_result.append(line.rsplit("\n")[0])
         print(shadow_result)
-        for i in passwd_result:
-            if i.split(':')[1] == "":
-                return {"code":"200","status":True,"msg":"高危！密码为空","datetime":getcurrenttime()}
-            elif i.split(':')[1] == "*":
-                return {"code":"200","status":True,"msg":"密码经过加密","datetime":getcurrenttime()}
-            elif i.split(':')[1] == "!":
-                return {"code":"200","status":True,"msg":"密码经过加密","datetime":getcurrenttime()}
-            elif i.split(':')[1] == "x":
-                return {"code":"200","status":True,"msg":"开始查找密码","datetime":getcurrenttime()}
+        for passwordline in passwd_result:
+            if passwordline.split(':')[1] == "":
+                final_result.append(passwordline.split(":")[0] + "高危，此账号未设置密码")
+            elif passwordline.split(':')[1] == "*":
+                final_result.append(passwordline.split(":")[0] + "此账户密码经过加密")
+            elif passwordline.split(':')[1] == "!":
+                final_result.append(passwordline.split(":")[0] + "此账户密码经过加密")
+            elif passwordline.split(':')[1] == "x":
+                for shadowline in shadow_result:
+                    if shadowline.split(":")[0] == passwordline.split(":")[0]:
+                        if checkKnowPasswd(shadowline.split(":")[1]):
+                            final_result.append(passwordline.split(":")[0] + "密码是:" + checkKnowPasswd(shadowline.split(":")[1]))
+                        else:
+                            pass
+        return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
     except:
         return {"code":"500","status":False,"msg":"未知错误","datetime":getcurrenttime()}
-    pass
