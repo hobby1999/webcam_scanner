@@ -4,6 +4,9 @@ from func_common.filepathforchecksec import get_filepaths
 from func_common.passwdcheck import checkKnowPasswd,bruteForcePasswd
 import os
 
+'''
+弱口令检测API，不包含暴力枚举破解，只进行收集弱口令检测
+'''
 @router.get("/checkpasswd",
 name="账号密码检查",
 description="用于账号密码检查的api，查看是否有弱密码泄露,username为用户名参数，filename为文件参数")
@@ -45,8 +48,10 @@ async def checkpasswd(username,filename):
                     if shadowline.split(":")[0] == passwordline.split(":")[0]:
                         if checkKnowPasswd(shadowline.split(":")[1]):
                             final_result.append(passwordline.split(":")[0] + "密码是:" + checkKnowPasswd(shadowline.split(":")[1]))
-                        else:
-                            pass
-        return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
+        if final_result is not None:
+            return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
+        else:
+            return {"code":"503","status":False,"msg":"未找到泄露密码","datetime":getcurrenttime()}
+
     except:
         return {"code":"500","status":False,"msg":"未知错误","datetime":getcurrenttime()}
