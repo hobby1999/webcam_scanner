@@ -6,7 +6,7 @@ from func_db.model import *
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-@router.get("/checkcompany",description="检查固件厂商，filename为固件名称，username为用户名",name="检查固件的厂商")
+@router.get("/checkcompany",description="检查固件厂商，filename为固件名称",name="检查固件的厂商")
 async def checkcompany(filename,db:Session=Depends(getdb)):
     try:
         file_tmp_name = filename.rsplit(".",-1)[0]
