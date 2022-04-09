@@ -7,12 +7,12 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 @router.get("/checkcompany",description="检查固件厂商，filename为固件名称，username为用户名",name="检查固件的厂商")
-async def checkcompany(username,filename,db:Session=Depends(getdb)):
+async def checkcompany(filename,db:Session=Depends(getdb)):
     try:
         file_tmp_name = filename.rsplit(".",-1)[0]
         db_result = funcs.get_company(db,firmwaretags=file_tmp_name)
         if db_result:
-            return {"code":"200","status":True,"msg":{"username":username,"Firmwaretags":db_result.company},"datetime":getcurrenttime()}
+            return {"code":"200","status":True,"msg":db_result.company,"datetime":getcurrenttime()}
         else:
             return {"code":"503","status":False,"msg":"未知厂商","datetime":getcurrenttime()}
     except:
