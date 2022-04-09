@@ -7,6 +7,7 @@ router = APIRouter()
 from api_common import api_download
 from api_common import api_uploadfile
 from api_common import api_delete
+from api_common import api_newpasswd
 from plugins import api_passwdcheck
 from plugins import api_checksec
 from plugins import api_simplescan

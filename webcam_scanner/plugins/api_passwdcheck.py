@@ -1,11 +1,8 @@
-import imp
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 from func_common.filepathforchecksec import get_filepaths
-from func_common.passwdcheck import checkKnowPasswd
 from func_db.dbconnect import getdb
 from func_db.query import funcs
-from func_db.modelcheck import PasswdDictBase
 from func_db.model import *
 from fastapi import Depends
 from sqlalchemy.orm import Session

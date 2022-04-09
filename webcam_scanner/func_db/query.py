@@ -15,7 +15,7 @@ class funcs:
         db_passwd = M_PasswdDict(original_password=passwddata.original_password,know_password=passwddata.know_password)
         db.add(db_passwd)
         db.commit()
-        db.refresh()
+        db.refresh(db_passwd)
         return db_passwd
     
     @staticmethod
@@ -28,5 +28,5 @@ class funcs:
         db_company = M_FirmwareType(company=companydata.company,firmwaretags=companydata.firmwaretags)
         db.add(db_company)
         db.commit()
-        db.refresh()
+        db.refresh(db_company)
         return db_company 
