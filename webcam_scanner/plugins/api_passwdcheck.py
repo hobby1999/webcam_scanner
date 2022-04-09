@@ -1,7 +1,14 @@
+import imp
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 from func_common.filepathforchecksec import get_filepaths
 from func_common.passwdcheck import checkKnowPasswd
+from func_db.dbconnect import getdb
+from func_db.query import funcs
+from func_db.modelcheck import PasswdDictBase
+from func_db.model import *
+from fastapi import Depends
+from sqlalchemy.orm import Session
 import os
 
 '''
@@ -10,7 +17,7 @@ import os
 @router.get("/checkpasswd",
 name="账号密码检查",
 description="用于账号密码检查的api，查看是否有弱密码泄露,username为用户名参数，filename为文件参数")
-async def checkpasswd(username,filename):
+async def checkpasswd(username,filename,db:Session = Depends(getdb)):
     file_tmp_path = filename.rsplit(".",1)[0]
     filepath = f"firmware/extract/{username}/{file_tmp_path}/_{filename}.extracted"
     passwd_path_result = []
@@ -46,8 +53,9 @@ async def checkpasswd(username,filename):
             elif passwordline.split(':')[1] == "x":
                 for shadowline in shadow_result:
                     if shadowline.split(":")[0] == passwordline.split(":")[0]:
-                        if checkKnowPasswd(shadowline.split(":")[1]):
-                            final_result.append(passwordline.split(":")[0] + "密码是:" + checkKnowPasswd(shadowline.split(":")[1]))
+                        db_result = funcs.get_passwd(db,firmwarepasswd=shadowline.split(":")[1])
+                        if db_result:
+                            final_result.append(passwordline.split(":")[0] + "密码是:" + db_result.know_password)
         if final_result is not None:
             return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
         else:
