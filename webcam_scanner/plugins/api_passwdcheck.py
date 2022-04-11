@@ -21,7 +21,7 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
     shadow_path_result = []
     passwd_result = []
     shadow_result = []
-    final_result = []
+    final_result = {}
     try:
         if os.path.isdir(filepath):
           
@@ -39,7 +39,6 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
             passwd_result.append(line.rsplit("\n")[0])
         for line in shadow_fopen.readlines():
             shadow_result.append(line.rsplit("\n")[0])
-        print(shadow_result)
         for passwordline in passwd_result:
             if passwordline.split(':')[1] == "":
                 final_result.append(passwordline.split(":")[0] + "高危，此账号未设置密码")
@@ -52,7 +51,7 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
                     if shadowline.split(":")[0] == passwordline.split(":")[0]:
                         db_result = funcs.get_passwd(db,firmwarepasswd=shadowline.split(":")[1])
                         if db_result:
-                            final_result.append(passwordline.split(":")[0] + "密码是:" + db_result.know_password)
+                            final_result[shadowline.split(":")[0]] = db_result.know_password
         if final_result is not None:
             return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
         else:
