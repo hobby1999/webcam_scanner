@@ -21,7 +21,7 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
     shadow_path_result = []
     passwd_result = []
     shadow_result = []
-    final_result = {}
+    final_result = []
     try:
         if os.path.isdir(filepath):
           
@@ -51,7 +51,7 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
                     if shadowline.split(":")[0] == passwordline.split(":")[0]:
                         db_result = funcs.get_passwd(db,firmwarepasswd=shadowline.split(":")[1])
                         if db_result:
-                            final_result[shadowline.split(":")[0]] = db_result.know_password
+                            final_result.append(shadowline.split(":")[0] + ":" +db_result.know_password)
         if final_result is not None:
             return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
         else:
