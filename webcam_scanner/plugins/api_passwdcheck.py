@@ -1,11 +1,7 @@
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 from func_common.filepathforchecksec import get_filepaths
-from func_db.dbconnect import getdb
-from func_db.query import funcs
-from func_db.model import *
-from fastapi import Depends
-from sqlalchemy.orm import Session
+
 import os
 
 '''
@@ -14,7 +10,7 @@ import os
 @router.get("/checkpasswd",
 name="账号密码检查",
 description="用于账号密码检查的api，查看是否有弱密码泄露,username为用户名参数，filename为文件参数")
-async def checkpasswd(username,filename,db:Session = Depends(getdb)):
+async def checkpasswd(username,filename):
     file_tmp_path = filename.rsplit(".",1)[0]
     filepath = f"firmware/extract/{username}/{file_tmp_path}/_{filename}.extracted"
     passwd_path_result = []
@@ -23,8 +19,10 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
     shadow_result = []
     final_result = []
     try:
+        password_dict = open("dict/weak_password.txt","r")
+        dict_data = password_dict.readlines()
+        result = str
         if os.path.isdir(filepath):
-          
           filepath_result =  get_filepaths(filepath)
           for i in filepath_result:
             if i.split('/')[len(i.split('/'))-1] == "passwd":
@@ -49,9 +47,9 @@ async def checkpasswd(username,filename,db:Session = Depends(getdb)):
             elif passwordline.split(':')[1] == "x":
                 for shadowline in shadow_result:
                     if shadowline.split(":")[0] == passwordline.split(":")[0]:
-                        db_result = funcs.get_passwd(db,firmwarepasswd=shadowline.split(":")[1])
-                        if db_result:
-                            final_result.append(shadowline.split(":")[0] + ":" +db_result.know_password)
+                        for data in dict_data:
+                            if data.split(":")[0] == shadowline.split(":")[1]:
+                                final_result.append(shadowline.split(":")[0] + ":" + data.split(":")[1])
         if final_result is not None:
             return {"code":"200","status":True,"msg":final_result,"datetime":getcurrenttime()}
         else:

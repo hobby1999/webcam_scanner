@@ -1,0 +1,7 @@
+Linux-3.10.14
+linux
+httpd
+telnet
+libcrypto.so.1.0.0
+libssl.so.1.0.0
+libjson-c.so.2.0.1

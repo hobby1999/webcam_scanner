@@ -1,18 +1,19 @@
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
-from func_db.dbconnect import getdb
-from func_db.query import funcs
-from func_db.model import *
-from fastapi import Depends
-from sqlalchemy.orm import Session
+
 
 @router.get("/checkcompany",description="检查固件厂商，filename为固件名称",name="检查固件的厂商")
-async def checkcompany(filename,db:Session=Depends(getdb)):
+async def checkcompany(filename):
     try:
         file_tmp_name = filename.rsplit(".",-1)[0]
-        db_result = funcs.get_company(db,firmwaretags=file_tmp_name)
-        if db_result:
-            return {"code":"200","status":True,"msg":db_result.company,"datetime":getcurrenttime()}
+        company_dict = open("dict/company.txt",'r')
+        dict_data = company_dict.readlines()
+        result = str
+        for data in dict_data:
+            if data.split(":")[0] == file_tmp_name:
+                result = data.split(":")[1]
+        if result:
+            return {"code":"200","status":True,"msg":result,"datetime":getcurrenttime()}
         else:
             return {"code":"503","status":False,"msg":"未知厂商","datetime":getcurrenttime()}
     except:
