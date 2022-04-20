@@ -42,32 +42,5 @@ async def uploadfile(username,file:UploadFile = File(...)):
                     return {"code":"200","status":True,"msg":"上传成功","datetime":getcurrenttime()}
                 else:
                     return {"code":"503","status":True,"msg":"上传不成功","datetime":getcurrenttime()}
-        else:
-            os.mkdir(f"firmware/tmp/{username}/")
-            if os.path.isdir(f"firmware/tmp/{username}/{file_tmp_path}"):
-                with open(f'{file.filename}',"wb") as buffer:
-                    shutil.copyfileobj(file.file,buffer)
-                    if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}"):
-                        os.remove(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                        shutil.move(file.filename,f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                    else:
-                        shutil.move(file.filename,f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}"):
-                    return {"code":"200","status":True,"msg":"上传成功","datetime":getcurrenttime()}
-                else:
-                    return {"code":"503","status":True,"msg":"上传不成功","datetime":getcurrenttime()}
-            else:
-                os.mkdir(f"firmware/tmp/{username}/{file_tmp_path}")
-                with open(f'{file.filename}',"wb") as buffer:
-                    shutil.copyfileobj(file.file,buffer)
-                    if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}"):
-                        os.remove(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                        shutil.move(file.filename,f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                    else:
-                        shutil.move(file.filename,f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}")
-                if os.path.isfile(f"firmware/tmp/{username}/{file_tmp_path}/{file.filename}"):
-                    return {"code":"200","status":True,"msg":"上传成功","datetime":getcurrenttime()}
-                else:
-                    return {"code":"503","status":True,"msg":"上传不成功","datetime":getcurrenttime()}
     except:
         return {"code":"500","status":True,"msg":"未知错误","datetime":getcurrenttime()}

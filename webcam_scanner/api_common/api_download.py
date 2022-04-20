@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from api_common.api_router import router
 from func_common.get_currenttime import getcurrenttime
 from starlette.responses import FileResponse
